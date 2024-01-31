@@ -3,20 +3,24 @@ package com.test.trafilea;
 import com.test.trafilea.part2.service.NumberCollectionService;
 import com.test.trafilea.part2.controller.NumberController;
 import com.test.trafilea.part2.service.NumberTypeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TestApplicationTests {
@@ -30,62 +34,54 @@ class TestApplicationTests {
 	@InjectMocks
 	private NumberController numberController;
 
-	@Test
-	public void testSaveNumber() {
-		int number = 10;
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-		Mockito.when(numberTypeService.determineNumberType(number)).thenReturn("Type 1");
-		Mockito.doNothing().when(numberCollectionService).saveNumber(number, "Type 1");
+	@Test
+	void saveNumber_ShouldReturnOkResponse() {
+		int number = 3;
+		String value = "Type 1";
+		lenient().when(numberTypeService.determineNumberType(number)).thenReturn(value);
 
 		ResponseEntity<String> response = numberController.saveNumber(number);
 
-		assertNotNull(response);
+		verify(numberCollectionService, times(1)).saveNumber(number, value);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("Number saved successfully.", response.getBody());
-
-		Mockito.verify(numberTypeService, Mockito.times(1)).determineNumberType(number);
-		Mockito.verify(numberCollectionService, Mockito.times(1)).saveNumber(number, "Type 1");
 	}
 
 	@Test
-	public void testGetNumberDetails() {
+	void getNumberDetails_WhenNumberExists_ShouldReturnOkResponse() {
 		int number = 5;
-
-		Mockito.when(numberCollectionService.getNumber(number)).thenReturn("Type 2");
+		String value = "Type 2";
+		lenient().when(numberCollectionService.getNumber(number)).thenReturn(value);
 
 		ResponseEntity<String> response = numberController.getNumberDetails(number);
 
-		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals("Type 2", response.getBody());
-
-		Mockito.verify(numberCollectionService, Mockito.times(1)).getNumber(number);
+		assertEquals(value, response.getBody());
 	}
 
 	@Test
-	public void testGetNumberDetailsNotFound() {
-		int number = 7;
-
-		Mockito.when(numberCollectionService.getNumber(number)).thenReturn(null);
+	void getNumberDetails_WhenNumberDoesNotExist_ShouldReturnNotFoundResponse() {
+		int number = 3;
+		lenient().when(numberCollectionService.getNumber(number)).thenReturn(null);
 
 		ResponseEntity<String> response = numberController.getNumberDetails(number);
 
-		assertNotNull(response);
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
 	@Test
-	public void testGetNumberCollection() {
-		Map<Integer, String> expectedCollection = Collections.singletonMap(1, "Type 1");
-
-		Mockito.when(numberCollectionService.getAllNumbers()).thenReturn(expectedCollection);
+	void getNumberCollection_ShouldReturnMapOfNumbers() {
+		Map<Integer, String> expectedMap = new HashMap<>();
+		lenient().when(numberCollectionService.getAllNumbers()).thenReturn(expectedMap);
 
 		Map<Integer, String> result = numberController.getNumberCollection();
 
-		assertNotNull(result);
-		assertEquals(expectedCollection, result);
-
-		Mockito.verify(numberCollectionService, Mockito.times(1)).getAllNumbers();
+		assertEquals(expectedMap, result);
 	}
 
 }

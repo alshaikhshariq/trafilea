@@ -32,13 +32,13 @@ public class NumberCollectionServiceImpl implements NumberCollectionService {
 
     @Override
     public String getNumber(int number) {
-        List<Value> value = valueRepository.findAll();
-        return value.get(0).getValues().get(number);
+        Value value = valueRepository.findById(1L).orElse(null);
+        return value == null ? null : value.getValues().get(number);
     }
 
     @Override
     public Map<Integer, String> getAllNumbers() {
-        List<Value> value = valueRepository.findAll();
-        return value.get(0).getValues();
+        Value value = valueRepository.findById(1L).orElse(null);
+        return value == null ? null : value.getValues();
     }
 }
