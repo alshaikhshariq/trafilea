@@ -1,4 +1,4 @@
-package com.test.trafilea;
+package com.test.trafilea.part2.service;
 
 import java.util.Map;
 

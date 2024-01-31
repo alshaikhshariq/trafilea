@@ -1,12 +1,14 @@
-package com.test.trafilea;
+package com.test.trafilea.part2.controller;
 
+import com.test.trafilea.part2.service.NumberCollectionService;
+import com.test.trafilea.part2.service.NumberTypeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/numbers")
+@RequestMapping("/part2")
 public class NumberController {
 
     private final NumberTypeService numberTypeService;
@@ -17,14 +19,14 @@ public class NumberController {
         this.numberCollectionService = numberCollectionService;
     }
 
-    @PostMapping("/save/{number}")
-    public ResponseEntity<String> saveNumber(@PathVariable int number) {
+    @PostMapping("/number")
+    public ResponseEntity<String> saveNumber(@RequestParam int number) {
         String value = numberTypeService.determineNumberType(number);
         numberCollectionService.saveNumber(number, value);
         return ResponseEntity.ok("Number saved successfully.");
     }
 
-    @GetMapping("/{number}")
+    @GetMapping("/get/{number}")
     public ResponseEntity<String> getNumberDetails(@PathVariable int number) {
         String value = numberCollectionService.getNumber(number);
         if (value != null) {
@@ -34,7 +36,7 @@ public class NumberController {
         }
     }
 
-    @GetMapping("/collection")
+    @GetMapping("/getAll")
     public Map<Integer, String> getNumberCollection() {
         return numberCollectionService.getAllNumbers();
     }

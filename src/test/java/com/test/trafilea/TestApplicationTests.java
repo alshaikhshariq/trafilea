@@ -1,5 +1,8 @@
 package com.test.trafilea;
 
+import com.test.trafilea.part2.service.NumberCollectionService;
+import com.test.trafilea.part2.controller.NumberController;
+import com.test.trafilea.part2.service.NumberTypeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
-class TrafileaApplicationTests {
+class TestApplicationTests {
 
 	@Mock
 	private NumberTypeService numberTypeService;

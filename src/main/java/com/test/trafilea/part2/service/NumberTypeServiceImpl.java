@@ -1,4 +1,4 @@
-package com.test.trafilea;
+package com.test.trafilea.part2.service;
 
 import org.springframework.stereotype.Service;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 @Service
-public class DefaultNumberTypeService implements NumberTypeService {
+public class NumberTypeServiceImpl implements NumberTypeService {
 
     private static final Map<Predicate<Integer>, String> typeMap = new HashMap<>();
 
